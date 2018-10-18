@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>index_1</title>
+        <script>
+            window.onload=function(){
+                var top_li_section=document.querySelectorAll(".top_li_section");
+                var top_fixed=document.querySelector(".top_fixed");
+                top_li_section.forEach(e=>e.parentNode.addEventListener("mouseenter",()=>{if(getComputedStyle(e).opacity==0)e.parentNode.classList.add("top_li_show")}));
+                top_li_section.forEach(e=>e.parentNode.addEventListener("mouseleave",()=>{e.parentNode.classList.remove("top_li_show")}));
+                /*------浮動至頂選單---*/
+                window.addEventListener("scroll",()=>{this.scrollY>150? top_fixed.classList.add("top_fixed_show"):top_fixed.classList.remove("top_fixed_show")});
+                /*-------主選單動畫設定------*/
+                var section_page_nav=document.querySelectorAll(".action");
+                function section_page_nav_action(window_Y){
+                    section_page_nav.forEach(e=>{if((e.parentNode.offsetTop+(e.offsetHeight/2))<=window_Y){e.classList.remove("action")}});
+                }
+                
+                /*-------------偵測當前頁面滾動高度------------*/
+                window.addEventListener("scroll",()=>{section_page_nav_action((this.scrollY+this.innerHeight))});
+                /*-------------表單輸入-----------------------*/
+                var area_json='https://raw.githubusercontent.com/lbs1102/work_1/master/city.json';
+                var area_list=[];
+                fetch(area_json)
+                .then(e=>e.json())
+                .then(e=>area_list.push(...e));
+                var city_list=[{"value":0,"name":"基隆市"},{"value":1,"name":"宜蘭縣"},{"value":2,"name":"臺北市"},{"value":3,"name":"新北市"},{"value":4,"name":"桃園市"},{"value":5,"name":"新竹市"},{"value":6,"name":"新竹縣"},{"value":7,"name":"苗栗縣"},{"value":8,"name":"臺中市"},{"value":9,"name":"南投縣"},{"value":10,"name":"彰化縣"},{"value":11,"name":"雲林縣"},{"value":12,"name":"嘉義市"},{"value":13,"name":"嘉義縣"},{"value":14,"name":"臺南市"},{"value":15,"name":"高雄市"},{"value":16,"name":"屏東縣"},{"value":17,"name":"花蓮縣"},{"value":18,"name":"臺東縣"},{"value":19,"name":"澎湖縣"},{"value":20,"name":"金門縣"},{"value":21,"name":"連江縣"}]
+                var city=document.querySelector("#subject_city");
+                var area=document.querySelector("#subject_area");
+                city_list.map(e=>city.innerHTML+="<option value="+e.value+">"+e.name+"</option>");
+                /*---------使用者輸入城市抓取該鄉鎮------*/
+                function area_catch(){
+                    while(area.firstChild){
+                        area.removeChild(area.firstChild);
+                    }
+                    area_list.filter(e=>e.value==this.value).map(e=>area.innerHTML+="<option value="+e.value+">"+e.name+"</option>");
+                }
+                city.addEventListener("change",area_catch)
+                /*-----------停止提交表單------------*/
+                var submit_buttom=document.querySelector(".submit");
+                submit_buttom.addEventListener("mouseenter",function(){this.type="submit"});
+                submit_buttom.addEventListener("mouseleave",function(){this.type="button"});
+                var submit_form_1=document.querySelector("#subject");
+                function submit_form_1_data(e){
+                    e.preventDefault();
+                    console.dir(this.name.value);
+                    this.reset();
+                }
+                submit_form_1.addEventListener("submit",submit_form_1_data)
+            }
+        </script>
+        <style>
+            *{
+            margin: 0px;
+            padding: 0px;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            font-weight: 100;
+            }
+            li{
+                list-style: none;
+            }
+            body{
+            }
+            img{
+                width: 100%;
+                height: 100%;
+                display: block;
+            }
+            /*---------------置頂條-------------------*/
+            .top_article{
+                z-index: 9999;
+                top: 0%;
+                width: 100%;
+                position: absolute;
+            }
+            .top_fixed{
+                z-index: 9999;
+                background-color: white;
+                position: fixed;
+                top: -10%;
+                width: 100%;
+                opacity: 0.97;
+                transition: 0.3s;
+            }
+            /*滾動時設定*/
+            .top_fixed_show{top: 0%}
+            .top_section{
+                display: flex;
+                width: 100%;
+            }
+            .top_section li{
+                display: flex;
+                justify-content: center;
+                flex: 1;
+                border-right:1px black solid; 
+                position: relative;
+                font-size: 30px;
+            }
+            .top_fixed .top_section li{border-bottom: 1px black solid}
+            .top_section li span{margin: 40px 0px;}
+            .top_fixed .top_section li span{margin: 10px 0px}
+            .top_section li.top_li_show .top_li_section{
+                opacity: 1;
+                visibility: visible;
+                top: 80%;
+            }
+            .top_li_section{
+                transition: 0.3s;
+                opacity: 0;
+                visibility: hidden;
+                top: 100%;
+                position: absolute;
+                background-color: white;
+                border: 1px solid black;
+                padding: 10px;
+            }
+            .top_li_section li{
+                margin: 20px 10px;
+                color: black;
+                font-size: 20px;
+                border: none;
+                
+            }
+        /*----------------主要文章段落----------------------*/
+        /*--------開頭-------*/
+        .section_top{
+            position: relative;
+            display: flex;
+            height: 60Vh;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+           
+        }
+        .section_top::before{
+            z-index: -1;
+            position: absolute;
+            content: "";
+            width: 100%;
+            height: 100%;
+            opacity: 0.3; 
+            background-size: cover;
+            background-repeat: inherit;
+            background-attachment: fixed;
+            background-image: url(https://c1.staticflickr.com/3/2547/32779082316_f077d6923e_b.jpg);
+        }
+        .section_top span{font-size: 50px}
+        .section_top img{width: 100px; height: 100px; margin:50px 0px; }
+        /*---------內文----------------*/  
+        .section_page{
+            max-width: 1200px;
+            margin: 0px auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+        
+        .section_page:nth-child(even) h1{left: -30%}
+        .section_page:nth-child(odd) h1{right: -30%}
+        
+        .section_page:nth-child(even) .section_page_text{margin-left: 150px}
+        .section_page:nth-child(odd) .section_page_text{margin-right: 150px}
+
+        .section_page:nth-child(odd) nav{flex-direction: row-reverse}
+        .section_page:nth-child(odd) .section_page_img img{box-shadow:-20px 20px #f0f1f1;}
+        .section_page:nth-child(even) .section_page_img img{box-shadow:20px 20px #f0f1f1;}
+        .section_page:nth-child(odd) .action .section_page_text_box{transform: translate3d(-100%,0,0);}
+        .section_page_arrow{
+            width: 50px;
+            height: auto;
+            margin: 50px 0px;
+        }
+        .section_page h1{
+            position: absolute;
+            color: #919394;
+            font-size: 100px;
+            transform: rotate(-90deg);
+            top: 50%;
+        }
+        .section_page nav{
+            display: flex;
+        }
+        .section_page_img{
+            position: relative;
+            max-width: 580px;
+        }
+        .section_page_img img{
+            opacity: 1;
+            transition: 1s;
+            transform: translate3d(0,0%,0);
+            }
+        .action .section_page_img img{opacity: 0;;transform: translate3d(0,40%,0)}
+        .section_page_text{
+            position: relative;
+            max-width: 33%;
+            display: flex;
+            justify-content: center;
+        }
+        .section_page_text_box{
+            transition: 0.7s;
+            opacity: 1;
+            transform: translate3d(0,0,0);
+            line-height: 35px;
+        }
+        .action .section_page_text_box{
+            opacity: 0;
+            transform: translate3d(100%,0,0);      
+        }
+        
+        .section_page_text div span{
+            text-align: center;
+            background-color: black;
+            color: white ;
+            font-size: 20px;
+            width: 60px;
+        }
+        .section_page_text h2{
+            transition: 1s;
+            margin: 30px 0px;
+            transform: translate3d(0,0,0);
+        }
+        .action .section_page_text_box h2{
+            transform: translate3d(0,40%,0);
+        }
+        /*---------------------總結----------------------*/
+        .section_bottom{
+            margin-top: 50px;
+            position: relative;
+            height: 80Vh;
+        }
+        .section_bottom::before{
+            z-index: -1;
+            content: "";
+            position: absolute;
+            top: 0%;
+            bottom: 0%;
+            left: 0%;
+            right: 0%;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            opacity: 0.3;
+            background-image: url(http://s1.1zoom.me/big0/802/Forests_Summer_Rays_of_498072.jpg)
+        }
+        .section_bottom h1{
+            position: absolute;
+            color: black;
+            font-size: 100px;
+            transform: rotate(90deg);
+            top: 50%;
+            right: 0%;
+            font-weight: 300;
+        }
+        .section_bottom nav{
+            margin: 0px auto;
+            width: 1000px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding: 50px;
+            justify-content: space-around;
+        }
+        .section_bottom nav span{
+            font-size: 30px;
+            margin-bottom: 10px;
+            display: block;
+            }
+        /*---------------------------表單---------------------------*/
+        .section_subject{
+            margin: 0px auto;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .section_subject form{
+            height: 80Vh;
+            width: 100%;
+            padding: 0px 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .section_subject span{font-size: 30px;margin: 10px 0px;}
+        .section_subject p{margin: 20px 0px;}
+        #subject nav{
+            position: relative;
+            display: flex;
+            width: 100%;
+            margin: 20px 0px;
+        }
+        #subject nav *{
+            display: block;
+            height: 50px;
+            width: 50%;
+            margin: 0px 20px;
+        }
+        #subject nav input{
+            border: 0px;
+            border-bottom: 1px black solid;
+        }
+        #subject nav input::placeholder{opacity: 0.5;}
+        #subject .subject_lable{
+            height: 20px;
+            margin: 0px;
+        }
+        #subject .submit{
+            transition: 0.2s;
+            padding: 20px 80px;
+            font-size: 20px;
+            background-color: aliceblue;
+            border: none;
+        }
+        #subject .submit:hover{
+            background-color: #9fb2c3;
+        }
+        </style>
+    </head>
+    <body>
+        <header>
+            <div class="top_article">
+                <ul class="top_section">
+                    <li>
+                        <span>測試選單</span> 
+                        <nav class="top_li_section">
+                            <ul>
+                                <li>測試選單內容</li>
+                                <li>測試選單內容</li>
+                                <li>測試選單內容</li>
+                                <li>測試選單內容</li>
+                            </ul>
+                        </nav>    
+                    </li>
+                    <li>
+                        <span>測試選單</span>
+                        <nav class="top_li_section">
+                            <ul>
+                                <li>測試選單內容</li>
+                                <li>測試選單內容</li>
+                                <li>測試選單內容</li>
+                                <li>測試選單內容</li>
+                            </ul>
+                        </nav>    
+                    </li>
+                    <li>
+                        <span>測試選單</span>
+                        <nav class="top_li_section"></nav>    
+                    </li>
+                    <li>
+                        <span>測試選單</span>
+                        <nav class="top_li_section"></nav>    
+                    </li>
+                    <li>
+                        <span>測試選單</span>
+                        <nav class="top_li_section"></nav>    
+                    </li>
+                </ul>
+            </div>
+            <div class="top_fixed">
+                <ul class="top_section">
+                    <li>
+                        <span>測試選單</span> 
+                        <nav class="top_li_section">
+                            <ul>
+                                <li>測試選單內容</li>
+                                <li>測試選單內容</li>
+                                <li>測試選單內容</li>
+                                <li>測試選單內容</li>
+                            </ul>
+                        </nav>    
+                    </li>
+                    <li>
+                        <span>測試選單</span>
+                        <nav class="top_li_section">
+                            <ul>
+                                <li>測試選單內容</li>
+                                <li>測試選單內容</li>
+                                <li>測試選單內容</li>
+                                <li>測試選單內容</li>
+                            </ul>
+                        </nav>    
+                    </li>
+                    <li>
+                        <span>測試選單</span>
+                        <nav class="top_li_section"></nav>    
+                    </li>
+                    <li>
+                        <span>測試選單</span>
+                        <nav class="top_li_section"></nav>    
+                    </li>
+                    <li>
+                        <span>測試選單</span>
+                        <nav class="top_li_section"></nav>    
+                    </li>
+                </ul>
+            </div>
+        </header>
+        <article>
+            <section class="section_top" >
+                <img src="https://www.appedu.com.tw/Ad/walile//images/student.svg" alt="">
+                <span>測試內容測試內容測試內容測試內容測試內容</span>
+                <P>測試內容測試內容測試內容測試內容測試內容</P>
+            </section>
+            <section class="section_page">
+                <img class="section_page_arrow" src="https://www.appedu.com.tw/Ad/walile//images/icon02.svg" alt="">
+                <h1>測試內容</h1>
+                <nav class="action">
+                    <div class="section_page_img">
+                        <img src="https://www.appedu.com.tw/Ad/walile//images/lg_page-2_img01.png" alt="">
+                    </div>
+                    <div class="section_page_text">
+                        <div class="section_page_text_box">
+                        <span>XXX</span>
+                        <h2>測試內容測試內容測試內容測試內容測試內容測試內容測試內容<br>
+                            測試內容測試內容測試內容測試內容測試內容測試內容測試內容
+                        </h2>
+                        <ul>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                        </ul>
+                        </div>
+                    </div>
+                </nav>
+            </section>
+            <section class="section_page">
+                <img class="section_page_arrow" src="https://www.appedu.com.tw/Ad/walile//images/icon02.svg" alt="">
+                <h1>測試內容</h1>
+                <nav class="action">
+                    <div class="section_page_img">
+                        <img src="https://www.appedu.com.tw/Ad/walile//images/lg_page-2_img01.png" alt="">
+                    </div>
+                    <div class="section_page_text">
+                        <div class="section_page_text_box">
+                        <span>XXX</span>
+                        <h2>測試內容測試內容測試內容測試內容測試內容測試內容測試內容<br>
+                            測試內容測試內容測試內容測試內容測試內容測試內容測試內容
+                        </h2>
+                        <ul>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                        </ul>
+                        </div>
+                    </div>
+                </nav>
+            </section>
+            <section class="section_page">
+                <img class="section_page_arrow" src="https://www.appedu.com.tw/Ad/walile//images/icon02.svg" alt="">
+                <h1>測試內容</h1>
+                <nav class="action">
+                    <div class="section_page_img">
+                        <img src="https://www.appedu.com.tw/Ad/walile//images/lg_page-2_img01.png" alt="">
+                    </div>
+                    <div class="section_page_text">
+                        <div class="section_page_text_box">
+                        <span>XXX</span>
+                        <h2>測試內容測試內容測試內容測試內容測試內容測試內容測試內容<br>
+                            測試內容測試內容測試內容測試內容測試內容測試內容測試內容
+                        </h2>
+                        <ul>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                        </ul>
+                        </div>
+                    </div>
+                </nav>
+            </section>
+            <section class="section_page">
+                <img class="section_page_arrow" src="https://www.appedu.com.tw/Ad/walile//images/icon02.svg" alt="">
+                <h1>測試內容</h1>
+                <nav class="action">
+                    <div class="section_page_img">
+                        <img src="https://www.appedu.com.tw/Ad/walile//images/lg_page-2_img01.png" alt="">
+                    </div>
+                    <div class="section_page_text">
+                        <div class="section_page_text_box">
+                        <span>XXX</span>
+                        <h2>測試內容測試內容測試內容測試內容測試內容測試內容測試內容<br>
+                            測試內容測試內容測試內容測試內容測試內容測試內容測試內容
+                        </h2>
+                        <ul>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                        </ul>
+                        </div>
+                    </div>
+                </nav>
+            </section>
+            <section class="section_page">
+                <img class="section_page_arrow" src="https://www.appedu.com.tw/Ad/walile//images/icon02.svg" alt="">
+                <h1>測試內容</h1>
+                <nav class="action">
+                    <div class="section_page_img">
+                        <img src="https://www.appedu.com.tw/Ad/walile//images/lg_page-2_img01.png" alt="">
+                    </div>
+                    <div class="section_page_text">
+                        <div class="section_page_text_box">
+                        <span>XXX</span>
+                        <h2>測試內容測試內容測試內容測試內容測試內容測試內容測試內容<br>
+                            測試內容測試內容測試內容測試內容測試內容測試內容測試內容
+                        </h2>
+                        <ul>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                        </ul>
+                        </div>
+                    </div>
+                </nav>
+            </section>
+            <section class="section_page">
+                <img class="section_page_arrow" src="https://www.appedu.com.tw/Ad/walile//images/icon02.svg" alt="">
+                <h1>測試內容</h1>
+                <nav class="action">
+                    <div class="section_page_img">
+                        <img src="https://www.appedu.com.tw/Ad/walile//images/lg_page-2_img01.png" alt="">
+                    </div>
+                    <div class="section_page_text">
+                        <div class="section_page_text_box">
+                        <span>XXX</span>
+                        <h2>測試內容測試內容測試內容測試內容測試內容測試內容測試內容<br>
+                            測試內容測試內容測試內容測試內容測試內容測試內容測試內容
+                        </h2>
+                        <ul>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                        </ul>
+                        </div>
+                    </div>
+                </nav>
+            </section>
+            <section class="section_page">
+                <img class="section_page_arrow" src="https://www.appedu.com.tw/Ad/walile//images/icon02.svg" alt="">
+                <h1>測試內容</h1>
+                <nav class="action">
+                    <div class="section_page_img">
+                        <img src="https://www.appedu.com.tw/Ad/walile//images/lg_page-2_img01.png" alt="">
+                    </div>
+                    <div class="section_page_text">
+                        <div class="section_page_text_box">
+                        <span>XXX</span>
+                        <h2>測試內容測試內容測試內容測試內容測試內容測試內容測試內容<br>
+                            測試內容測試內容測試內容測試內容測試內容測試內容測試內容
+                        </h2>
+                        <ul>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                            <li>測試內容測試內容</li>
+                        </ul>
+                        </div>
+                    </div>
+                </nav>
+            </section>
+            <section class="section_bottom" >
+                <h1>測試內容</h1>
+                <nav>
+                    <div>
+                     <span>測試內容測試內容測試內容測試</span>
+                     <p>測試內容測試內容測試內容測試內容測試內容測試內容測試內容測試內容</p>   
+                    </div>
+                    <div>
+                     <span>測試內容測試內容測試內容測試</span>
+                     <p>測試內容測試內容測試內容測試內容測試內容測試內容測試內容測試內容</p>   
+                    </div>
+                    <div>
+                     <span>測試內容測試內容測試內容測試</span>
+                     <p>測試內容測試內容測試內容測試內容測試內容測試內容測試內容測試內容</p>   
+                    </div>
+                    <div>
+                     <span>測試內容測試內容測試內容測試</span>
+                     <p>測試內容測試內容測試內容測試內容測試內容測試內容測試內容測試內容</p>   
+                    </div>
+                </nav>
+            </section>
+            <section class="section_subject">
+                <img class="section_page_arrow" src="https://www.appedu.com.tw/Ad/walile//images/icon02.svg" alt="">
+                <form action="" id="subject">
+                    <span>測試內容測試內容</span>
+                    <p>測試內容測試內容測試內容測試內容</p>
+                    <nav class="subject_lable"><label>姓名</label><label>性別</label></nav>
+                    <nav><input type="text" name="name" placeholder="請輸入性名"><input type="text" name="sex" placeholder="請輸入性別"></nav>
+                    <nav class="subject_lable"><label>行動電話</label><label>住宅電話</label></nav>
+                    <nav><input type="text" name="M_P" placeholder="請輸入行動電話"><input type="text" name="H_P" placeholder="請輸入家用電話"></nav>
+                    <nav><select name="city" id="subject_city"></select><select name="area" id="subject_area"></select></nav>
+                    <button type="button" class="submit">send</button>
+                    <!--<input type="submit" value="send" class="submit">-->
+                </form>
+            </section>
+        </article>
+        
+    </body>
+</html>
